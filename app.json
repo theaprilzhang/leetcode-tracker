@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "leetcode-planner-app",
-    "slug": "leetcode-planner-app",
+    "name": "LeetCode Planner",
+    "slug": "leetcode-planner",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "leetcodeplannerapp",
+    "scheme": "leetcodeplanner",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
@@ -14,7 +14,8 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.leetcode-planner"
     },
     "android": {
       "adaptiveIcon": {
