@@ -23,8 +23,13 @@ jobs:
       - name: Build for web
         run: npx expo export --platform web
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+      - name: Move dist to docs
+        run: mv dist docs
+
+      - name: Commit and push docs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs
+          git commit -m "Deploy to GitHub Pages [skip ci]" || echo "No changes to commit"
+          git push
