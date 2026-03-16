@@ -9,12 +9,9 @@ for root, dirs, files in os.walk("docs"):
             with open(fp, "r", encoding="utf-8") as f:
                 content = f.read()
             
-            # Remove all old base tags
+            # Remove all old base tags and add a single correct absolute base
             content = re.sub(r'<base href="[^"]*">', "", content)
-            
-            # Add single correct base tag
-            if '<base href="/leetcode-tracker/">' not in content:
-                content = content.replace("<head>", '<head><base href="/leetcode-tracker/">')
+            content = content.replace("<head>", '<head><base href="/leetcode-tracker/">')
             
             # Fix paths: use absolute paths under the repo path so assets load
             # regardless of base tag or relative resolution
