@@ -26,19 +26,27 @@ jobs:
       - name: Move dist to docs
         run: mv dist docs
 
+      - name: Fix Expo's double assets directory issue
+        run: |
+          # Fix the docs/assets/assets nested directory issue from Expo export
+          if [ -d "docs/assets/assets" ]; then
+            mv docs/assets/assets/* docs/assets/ 2>/dev/null || true
+            rm -rf docs/assets/assets
+          fi
+
       - name: Fix asset paths for GitHub Pages subdirectory
         run: |
           # Fix double assets path first
           find docs -name "*.html" -type f | while read file; do
-            sed -i 's|assets/assets|assets|g' "$file"
-            sed -i 's|url("/|url("./|g' "$file"
-            sed -i 's|href="/|href="./|g' "$file"
-            sed -i 's|src="/|src="./|g' "$file"
+            sed -i '' 's|assets/assets|assets|g' "$file"
+            sed -i '' 's|url("/|url("./|g' "$file"
+            sed -i '' 's|href="/|href="./|g' "$file"
+            sed -i '' 's|src="/|src="./|g' "$file"
           done
           # Ensure base href is in all HTML files
           find docs -name "*.html" -type f | while read file; do
             if ! grep -q '<base href="/leetcode-tracker/">' "$file"; then
-              sed -i 's|<head>|<head><base href="/leetcode-tracker/">|g' "$file"
+              sed -i '' 's|<head>|<head><base href="/leetcode-tracker/">|g' "$file"
             fi
           done
 
