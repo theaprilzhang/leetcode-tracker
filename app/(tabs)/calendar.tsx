@@ -8,7 +8,6 @@ import { loadState, saveState } from '@/utils/storage';
 import { PlannerState } from '@/utils/plannerLogic';
 import DayDetailModal from '@/components/DayDetailModal';
 import { useFocusEffect } from 'expo-router';
-import { Text } from 'react-native';
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
