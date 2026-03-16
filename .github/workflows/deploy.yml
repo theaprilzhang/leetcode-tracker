@@ -36,19 +36,36 @@ jobs:
 
       - name: Fix asset paths for GitHub Pages subdirectory
         run: |
-          # Fix double assets path first
-          find docs -name "*.html" -type f | while read file; do
-            sed -i 's|assets/assets|assets|g' "$file"
-            sed -i 's|url("/|url("./|g' "$file"
-            sed -i 's|href="/|href="./|g' "$file"
-            sed -i 's|src="/|src="./|g' "$file"
-          done
-          # Ensure base href is in all HTML files
-          find docs -name "*.html" -type f | while read file; do
-            if ! grep -q '<base href="/leetcode-tracker/">' "$file"; then
-              sed -i 's|<head>|<head><base href="/leetcode-tracker/">|g' "$file"
-            fi
-          done
+          # Python script to fix all base tags and paths safely
+          python3 << 'PYSCRIPT'
+import os
+import re
+
+for root, dirs, files in os.walk("docs"):
+    for file in files:
+        if file.endswith(".html"):
+            filepath = os.path.join(root, file)
+            with open(filepath, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            # Remove ALL base tags first (prevent duplicates)
+            content = re.sub(r'<base href="[^"]*">', '', content)
+            
+            # Add exactly ONE correct base tag
+            if '<base href="/leetcode-tracker/">' not in content:
+                content = content.replace('<head>', '<head><base href="/leetcode-tracker/">')
+            
+            # Ensure all asset paths are relative
+            content = re.sub(r'url\("/', 'url("./', content)
+            content = re.sub(r'href="/', 'href="./', content)
+            content = re.sub(r'src="/', 'src="./', content)
+            
+            # Fix double assets path if any
+            content = content.replace('assets/assets', 'assets')
+            
+            with open(filepath, 'w', encoding='utf-8') as f:
+                f.write(content)
+PYSCRIPT
 
       - name: Commit and push docs
         run: |
