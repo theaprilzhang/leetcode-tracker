@@ -26,6 +26,17 @@ jobs:
       - name: Move dist to docs
         run: mv dist docs
 
+      - name: Fix all asset paths for GitHub Pages subdirectory
+        run: |
+          # Add base href to all HTML files
+          find docs -name "*.html" -type f -exec sed -i 's|<head>|<head><base href="/leetcode-tracker/">|g' {} +
+          # Convert absolute asset paths to relative
+          find docs -name "*.html" -type f -exec sed -i 's|url("/|url("./|g' {} +
+          find docs -name "*.html" -type f -exec sed -i 's|href="/|href="./|g' {} +
+          find docs -name "*.html" -type f -exec sed -i 's|src="/|src="./|g' {} +
+          # Fix double assets paths
+          find docs -name "*.html" -type f -exec sed -i 's|assets/assets|assets|g' {} +
+
       - name: Commit and push docs
         run: |
           git config user.name "github-actions[bot]"
