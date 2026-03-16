@@ -5,7 +5,7 @@ import { Text, View } from './Themed';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from './useColorScheme';
 import { PlanItem, PlaceholderMeta } from '@/utils/plannerLogic';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+
 
 interface DayDetailModalProps {
     visible: boolean;
@@ -38,7 +38,7 @@ export default function DayDetailModal({ visible, onClose, date, items, placehol
                 <View style={styles.header}>
                     <Text style={styles.title}>{date}</Text>
                     <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-                        <FontAwesome name="times" size={20} color={theme.icon} />
+                        <Text style={{ fontSize: 18, color: theme.icon }}>✕</Text>
                     </TouchableOpacity>
                 </View>
 

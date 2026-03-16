@@ -8,7 +8,7 @@ import { loadState, saveState } from '@/utils/storage';
 import { PlannerState } from '@/utils/plannerLogic';
 import DayDetailModal from '@/components/DayDetailModal';
 import { useFocusEffect } from 'expo-router';
-import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { Text } from 'react-native';
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -78,11 +78,11 @@ export default function CalendarScreen() {
         <View style={[styles.container, { backgroundColor: theme.background }]}>
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => changeMonth(-1)} style={styles.navBtn}>
-                    <FontAwesome name="chevron-left" size={16} color={theme.text} />
+                    <Text style={{ fontSize: 16, color: theme.text }}>{'<'}</Text>
                 </TouchableOpacity>
                 <Text style={styles.monthTitle}>{monthLabel}</Text>
                 <TouchableOpacity onPress={() => changeMonth(1)} style={styles.navBtn}>
-                    <FontAwesome name="chevron-right" size={16} color={theme.text} />
+                    <Text style={{ fontSize: 16, color: theme.text }}>{'>'}</Text>
                 </TouchableOpacity>
             </View>
 
