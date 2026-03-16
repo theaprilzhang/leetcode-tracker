@@ -35,23 +35,7 @@ jobs:
           fi
 
       - name: Fix asset paths for GitHub Pages subdirectory
-        run: |
-          python3 << 'EOF'
-import os, re
-for root, dirs, files in os.walk("docs"):
-    for file in files:
-        if file.endswith(".html"):
-            fp = os.path.join(root, file)
-            with open(fp, "r") as f: content = f.read()
-            content = re.sub(r'<base href="[^"]*">', "", content)
-            if '<base href="/leetcode-tracker/">' not in content:
-                content = content.replace("<head>", '<head><base href="/leetcode-tracker/">')
-            content = re.sub(r'url\("/', 'url("./', content)
-            content = re.sub(r'href="/', 'href="./', content)
-            content = re.sub(r'src="/', 'src="./', content)
-            content = content.replace("assets/assets", "assets")
-            with open(fp, "w") as f: f.write(content)
-EOF
+        run: python3 .github/fix_paths.py
 
       - name: Commit and push docs
         run: |
