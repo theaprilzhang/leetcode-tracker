@@ -36,36 +36,22 @@ jobs:
 
       - name: Fix asset paths for GitHub Pages subdirectory
         run: |
-          # Python script to fix all base tags and paths safely
-          python3 << 'PYSCRIPT'
-import os
-import re
-
+          python3 << 'EOF'
+import os, re
 for root, dirs, files in os.walk("docs"):
     for file in files:
         if file.endswith(".html"):
-            filepath = os.path.join(root, file)
-            with open(filepath, 'r', encoding='utf-8') as f:
-                content = f.read()
-            
-            # Remove ALL base tags first (prevent duplicates)
-            content = re.sub(r'<base href="[^"]*">', '', content)
-            
-            # Add exactly ONE correct base tag
+            fp = os.path.join(root, file)
+            with open(fp, "r") as f: content = f.read()
+            content = re.sub(r'<base href="[^"]*">', "", content)
             if '<base href="/leetcode-tracker/">' not in content:
-                content = content.replace('<head>', '<head><base href="/leetcode-tracker/">')
-            
-            # Ensure all asset paths are relative
+                content = content.replace("<head>", '<head><base href="/leetcode-tracker/">')
             content = re.sub(r'url\("/', 'url("./', content)
             content = re.sub(r'href="/', 'href="./', content)
             content = re.sub(r'src="/', 'src="./', content)
-            
-            # Fix double assets path if any
-            content = content.replace('assets/assets', 'assets')
-            
-            with open(filepath, 'w', encoding='utf-8') as f:
-                f.write(content)
-PYSCRIPT
+            content = content.replace("assets/assets", "assets")
+            with open(fp, "w") as f: f.write(content)
+EOF
 
       - name: Commit and push docs
         run: |
