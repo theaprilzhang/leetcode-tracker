@@ -16,12 +16,17 @@ for root, dirs, files in os.walk("docs"):
             if '<base href="/leetcode-tracker/">' not in content:
                 content = content.replace("<head>", '<head><base href="/leetcode-tracker/">')
             
-            # Fix paths
-            content = re.sub(r'url\("/', 'url("./', content)
-            content = re.sub(r'href="/', 'href="./', content)
-            content = re.sub(r'src="/', 'src="./', content)
-            
-            # Fix double assets
+            # Fix paths: use absolute paths under the repo path so assets load
+            # regardless of base tag or relative resolution
+            content = re.sub(r'url\("\./?assets', 'url("/leetcode-tracker/assets', content)
+            content = re.sub(r'url\("/assets', 'url("/leetcode-tracker/assets', content)
+            content = re.sub(r'href=\"\./?assets', 'href=\"/leetcode-tracker/assets', content)
+            content = re.sub(r'href=\"/assets', 'href=\"/leetcode-tracker/assets', content)
+            content = re.sub(r'src=\"\./?_expo', 'src=\"/leetcode-tracker/_expo', content)
+            content = re.sub(r'src=\"/_expo', 'src=\"/leetcode-tracker/_expo', content)
+            # favicon
+            content = content.replace('href="./favicon.ico"', 'href="/leetcode-tracker/favicon.ico"')
+            # Fix double assets (if any)
             content = content.replace("assets/assets", "assets")
             
             with open(fp, "w", encoding="utf-8") as f:
