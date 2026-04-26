@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity, ScrollView, Alert, ActivityIndicator, Platform } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
@@ -26,36 +26,41 @@ export default function SettingsScreen() {
     saveState(newState);
   };
 
+  const confirm = (message: string) =>
+    Platform.OS === 'web' ? window.confirm(message) : true;
+
   const handleGenerate = () => {
     if (!state) return;
-    Alert.alert("Generate Plan", "This will overwrite your current schedule. Continued?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Generate",
-        onPress: () => {
-          const newState = generatePlan(state);
-          setState(newState);
-          saveState(newState);
-          Alert.alert("Success", "Plan generated!");
-        }
-      }
-    ]);
+    const doGenerate = () => {
+      const newState = generatePlan(state);
+      setState(newState);
+      saveState(newState);
+    };
+    if (Platform.OS === 'web') {
+      if (confirm("This will overwrite your current schedule. Continue?")) doGenerate();
+    } else {
+      Alert.alert("Generate Plan", "This will overwrite your current schedule. Continued?", [
+        { text: "Cancel", style: "cancel" },
+        { text: "Generate", onPress: doGenerate },
+      ]);
+    }
   };
 
   const handleClear = () => {
     if (!state) return;
-    Alert.alert("Clear Plan", "Are you sure?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Clear",
-        style: 'destructive',
-        onPress: () => {
-          const newState = { ...state, items: [], placeholders: {} };
-          setState(newState);
-          saveState(newState);
-        }
-      }
-    ]);
+    const doClear = () => {
+      const newState = { ...state, items: [], placeholders: {} };
+      setState(newState);
+      saveState(newState);
+    };
+    if (Platform.OS === 'web') {
+      if (confirm("Clear plan? Are you sure?")) doClear();
+    } else {
+      Alert.alert("Clear Plan", "Are you sure?", [
+        { text: "Cancel", style: "cancel" },
+        { text: "Clear", style: 'destructive', onPress: doClear },
+      ]);
+    }
   };
 
   if (loading || !state) {
